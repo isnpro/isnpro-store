@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Navigasi dengan Galaxy Background</title>
+    <style>
+        :root {
+            --main-color: #1e90ff;
+            --light-color: #add8e6;
+            --dark-color: #000080;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            color: white;
+            transition: all 0.3s;
+            background-color: #000000;
+            padding-bottom: 70px; /* Ruang untuk navbar di bawah */
+        }
+        
+        #galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #000000;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+            border-radius: 50%;
+            animation: shooting var(--shooting-duration) linear infinite;
+            opacity: 0;
+        }
+        
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+            transform-origin: left center;
+            animation: shooting-tail var(--shooting-duration) linear infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes shooting {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(1000px) translateY(300px);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes shooting-tail {
+            0% {
+                transform: scaleX(0);
+            }
+            100% {
+                transform: scaleX(1);
+            }
+        }
+        
+        .content-wrapper {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(var(--main-rgb), 0.5);
+            margin-bottom: 80px; /* Ruang ekstra untuk navbar */
+        }
+        
+        /* NAVBAR DI BAWAH */
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            background-color: rgba(var(--main-rgb), 0.7);
+            padding: 15px 0;
+            border-top: 1px solid var(--main-color);
+            z-index: 100;
+        }
+        
+        .navbar-item {
+            text-align: center;
+            font-size: 16px;
+            color: var(--light-color);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .navbar-item:hover, .navbar-item.active {
+            background-color: var(--main-color);
+            color: white;
+            text-shadow: 0 0 10px #ffffff;
+        }
+        
+        .navbar-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        .brand-name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--light-color);
+            text-align: center;
+            text-shadow: 0 0 10px var(--main-color);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px var(--light-color), 0 0 10px var(--light-color);
+            }
+            to {
+                text-shadow: 0 0 10px var(--main-color), 0 0 20px var(--main-color), 0 0 30px var(--main-color);
+            }
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: var(--light-color);
+            text-align: center;
+            text-shadow: 0 0 10px var(--main-color);
+        }
+        
+        .search-container {
+            margin: 0 auto 30px;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--main-color);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            border-color: var(--light-color);
+            box-shadow: 0 0 15px var(--main-color);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-color);
+        }
+        
+        .product-card {
+            background-color: rgba(var(--main-rgb), 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(var(--main-rgb), 0.4);
+            border: 1px solid var(--main-color);
+        }
+        
+        .product-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--light-color);
+        }
+        
+        .product-subtitle {
+            font-size: 14px;
+            color: var(--light-color);
+            margin-bottom: 15px;
+        }
+        
+        .product-description {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            color: #e6e6fa;
+        }
+        
+        .buy-button {
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(var(--main-rgb), 0.5);
+        }
+        
+        .buy-button:hover {
+            background-color: var(--dark-color);
+            box-shadow: 0 0 15px rgba(var(--main-rgb), 0.7);
+            transform: translateY(-2px);
+        }
+        
+        .divider {
+            border-top: 1px solid var(--main-color);
+            margin: 20px 0;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .setting-option {
+            margin-bottom: 20px;
+        }
+        
+        .setting-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--light-color);
+        }
+        
+        .color-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.selected {
+            border-color: white;
+            box-shadow: 0 0 10px white;
+        }
+        
+        .size-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .size-option {
+            padding: 5px 10px;
+            background-color: rgba(var(--main-rgb), 0.5);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .size-option:hover {
+            background-color: rgba(var(--main-rgb), 0.7);
+        }
+        
+        .size-option.selected {
+            background-color: var(--main-color);
+            color: white;
+            box-shadow: 0 0 10px rgba(var(--main-rgb), 0.5);
+        }
+        
+        .music-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .music-option {
+            padding: 10px;
+            background-color: rgba(var(--main-rgb), 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .music-option:hover {
+            background-color: rgba(var(--main-rgb), 0.5);
+        }
+        
+        .music-option.selected {
+            background-color: var(--main-color);
+            color: white;
+            box-shadow: 0 0 10px rgba(var(--main-rgb), 0.5);
+        }
+        
+        .music-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        #background-music {
+            display: none;
+        }
+        
+        .volume-control {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* New styles for price list dropdown */
+        .price-list-container {
+            margin-top: 15px;
+        }
+        
+        .price-list-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--main-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .price-list-toggle:hover {
+            background-color: var(--dark-color);
+        }
+        
+        .price-list-toggle .arrow {
+            transition: transform 0.3s;
+        }
+        
+        .price-list-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+        
+        .price-list {
+            display: none;
+            margin-top: 10px;
+            background-color: rgba(var(--main-rgb), 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .price-list.open {
+            display: block;
+        }
+        
+        .price-option {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid var(--main-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .price-option:last-child {
+            border-bottom: none;
+        }
+        
+        .price-option:hover {
+            background-color: rgba(var(--main-rgb), 0.3);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Copyright footer */
+        .copyright-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            color: #999999;
+            font-size: 14px;
+            border-top: 1px solid #333333;
+        }
+
+        /* New styles for scrollable content */
+        #beranda .content,
+        #download .content {
+            padding-bottom: 20px;
+            max-height: calc(99vh - 140px);
+            overflow-y: auto;
+        }
+
+        #beranda .content::-webkit-scrollbar-track,
+        #download .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #beranda .content::-webkit-scrollbar-thumb,
+        #download .content::-webkit-scrollbar-thumb {
+            background: var(--main-color);
+            border-radius: 10px;
+        }
+
+        /* New styles for contact options */
+        .contact-options {
+            display: none;
+            margin-top: 15px;
+            background-color: rgba(var(--main-rgb), 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .contact-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 8px;
+        }
+
+        .contact-option:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-option:hover {
+            background-color: rgba(var(--main-rgb), 0.4);
+        }
+
+        .contact-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .contact-text {
+            flex-grow: 1;
+        }
+
+        /* New styles for welcome screen */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+
+        #welcome-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-title {
+            font-size: 36px;
+            color: var(--light-color);
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--main-color);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .start-button {
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(var(--main-rgb), 0.7);
+        }
+
+        .start-button:hover {
+            background-color: var(--dark-color);
+            box-shadow: 0 0 30px rgba(var(--main-rgb), 0.9);
+            transform: translateY(-3px);
+        }
+        
+        /* New style for disclaimer text */
+        .disclaimer-text {
+            margin-top: 20px;
+            color: var(--light-color);
+            text-align: center;
+            max-width: 80%;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* New styles for download buttons */
+        .download-option {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px;
+            background-color: rgba(var(--main-rgb), 0.2);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .download-option:hover {
+            background-color: rgba(var(--main-rgb), 0.4);
+        }
+
+        .download-icon {
+            width: 40px;
+            height: 40px;
+        }
+
+        .download-info {
+            flex-grow: 1;
+        }
+
+        .download-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--light-color);
+        }
+
+        .download-desc {
+            font-size: 14px;
+            color: #e6e6fa;
+        }
+
+        .download-button {
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .download-button:hover {
+            background-color: var(--dark-color);
+        }
+        
+        /* New styles for URL input */
+        .url-input-container {
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .url-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--main-color);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .url-input:focus {
+            border-color: var(--light-color);
+            box-shadow: 0 0 10px var(--main-color);
+        }
+        
+        .download-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* Loading spinner styles */
+        .download-button.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .download-button.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Error message styles */
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        /* New styles for demo videos */
+        #demo-video {
+            width: 100%;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--main-color);
+            box-shadow: 0 0 15px rgba(var(--main-rgb), 0.4);
+        }
+        
+        #demo-video-container {
+            margin-top: 15px;
+            display: none;
+            transition: all 0.3s ease;
+        }
+        
+        /* New styles for demo images */
+        #demo-image {
+            max-width: 100%;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--main-color);
+            box-shadow: 0 0 15px rgba(var(--main-rgb), 0.4);
+        }
+        
+        #demo-image-container {
+            margin-top: 15px;
+            display: none;
+            transition: all 0.3s ease;
+        }
+        
+        /* New styles for panel demo image */
+        #demo-panel-container {
+            margin-top: 15px;
+            display: none;
+            transition: all 0.3s ease;
+        }
+        
+        /* New styles for information tabs */
+        .info-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--main-color);
+        }
+        
+        .info-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .info-tab.active {
+            border-bottom: 3px solid var(--main-color);
+            color: var(--light-color);
+            font-weight: bold;
+        }
+        
+        .info-tab:hover {
+            background-color: rgba(var(--main-rgb), 0.2);
+        }
+        
+        .info-content {
+            display: none;
+        }
+        
+        .info-content.active {
+            display: block;
+        }
+        
+        .info-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .info-list-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(var(--main-rgb), 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .info-list-item:hover {
+            background-color: rgba(var(--main-rgb), 0.2);
+        }
+        
+        .info-list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-list-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .info-list-desc {
+            font-size: 14px;
+            color: #e6e6fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen">
+        <div class="welcome-title">ISN X MAHIRU</div>
+        <button class="start-button" onclick="startApp()">Mulai</button>
+        <div class="disclaimer-text">Ini bukan link phising + tidak di suruh login hanya pencet mulai, dan ini web store Isn_pro</div>
+    </div>
+
+    <div id="galaxy-bg"></div>
+    
+    <audio id="background-music" loop></audio>
+    
+    <div class="content-wrapper">
+        <div id="beranda" class="page">
+            <div class="content">
+                <div class="brand-name">ISN X MAHIRU</div>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Cari produk...">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-title">Sewa bot</div>
+                    <div class="product-subtitle">WhatsApp</div>
+                    <div class="product-description">
+                    Bot jaga grub WhatsApp only, untuk para jb yanng risih adanya unchek, linkgrub, suntik, bokep, dll
+                    </div>
+                    
+                    <div class="price-list-container">
+                        <div class="price-list-toggle" onclick="togglePriceList('bot-prices')">
+                            <span>Lihat Daftar Harga</span>
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        
+                        <div id="bot-prices" class="price-list">
+                            <div class="price-option" onclick="redirectToWhatsApp('Sewa bot permanen Rp 5.000')">
+                                <span>Permanen</span>
+                                <span>Rp 5.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Sewa bot l 1 minggu Rp 1.000')">
+                                <span>1 minggu</span>
+                                <span>Rp 1.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Sewa bot 2 minggu Rp 2.000')">
+                                <span>2 minggu</span>
+                                <span>Rp 2.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Sewa bot 3 mimggu Rp 3.000')">
+                                <span>3 minggu</span>
+                                <span>Rp 3.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="product-card">
+                    <div class="product-title">Murbug</div>
+                    <div class="product-subtitle">Telegram</div>
+                    <div class="product-description">
+                    Murbug telegram + WhatsApp, sebelum membeli murbug wajib ada telegram ( ini bugnya tetap bug untuk WhatsApp )
+                    </div>
+                    
+                    <div class="price-list-container">
+                        <div class="price-list-toggle" onclick="togglePriceList('Murbug-prices')">
+                            <span>Lihat Daftar Harga</span>
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        
+                        <div id="Murbug-prices" class="price-list">
+                            <div class="price-option" onclick="redirectToWhatsApp('Murbug permanen Rp 10.000')">
+                                <span>Permanen</span>
+                                <span>Rp 10.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Murbug 2 minggu Rp 5.000')">
+                                <span>2 minggu</span>
+                                <span>Rp 5.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Owner Murbug Rp 20.000')">
+                                <span>Owner</span>
+                                <span>Rp 20.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="product-card">
+                    <div class="product-title">Script Bot</div>
+                    <div class="product-subtitle">WhatsApp + Telegram</div>
+                    <div class="product-description">
+                    Script Bot serangkaian instruksi atau kode yang digunakan untuk mengotomatiskan tugas tertentu pada suatu program
+                    </div>
+                    
+                    <div class="price-list-container">
+                        <div class="price-list-toggle" onclick="togglePriceList('Script-prices')">
+                            <span>Lihat Daftar Harga</span>
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        
+                        <div id="Script-prices" class="price-list">
+                            <div class="price-option" onclick="redirectToWhatsApp('Sc jaga grub Rp 10.000')">
+                                <span>Script Jaga Grub</span>
+                                <span>Rp 10.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Script pushkontak Rp 10.000')">
+                                <span>Script Pushkontak</span>
+                                <span>Rp 10.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Script bug free up Rp 40.000')">
+                                <span>Script Bug Free Up</span>
+                                <span>Rp 40.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="product-card">
+                    <div class="product-title">Panel Bot</div>
+                    <div class="product-subtitle">Pterodactyl</div>
+                    <div class="product-description">
+                    Panel Pterodactyl bisa req username dan tentunya ada garansi 15 hari masa aktif panel 30h
+                    </div>
+                    
+                    <div class="price-list-container">
+                        <div class="price-list-toggle" onclick="togglePriceList('Panel-prices')">
+                            <span>Lihat Daftar Harga</span>
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        
+                        <div id="Panel-prices" class="price-list">
+                            <div class="price-option" onclick="redirectToWhatsApp('Panel Unlim Rp 8.000')">
+                                <span>Unlimited</span>
+                                <span>Rp 8.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Panel 2gb Rp.1.000')">
+                                <span>2GB</span>
+                                <span>Rp 1.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('panel 4gb Rp.2.000')">
+                                <span>4GB</span>
+                                <span>Rp 2.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('panel 6gb Rp 3.000')">
+                                <span>6GB</span>
+                                <span>Rp 3.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('panel 8gb Rp.4.000')">
+                                <span>8GB</span>
+                                <span>Rp 4.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('panel 10gb Rp 5.000')">
+                                <span>10GB</span>
+                                <span>Rp 5.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="product-card">
+                    <div class="product-title">Jasa bikin All Trx</div>
+                    <div class="product-subtitle">WhatsApp</div>
+                    <div class="product-description">
+                    All trx on/off untuk memberitahu para buyer yang melihat grub jika kalian sedang ingin trx on/off
+                    </div>
+                    
+                    <div class="price-list-container">
+                        <div class="price-list-toggle" onclick="togglePriceList('trx-prices')">
+                            <span>Lihat Daftar Harga</span>
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        
+                        <div id="trx-prices" class="price-list">
+                            <div class="price-option" onclick="redirectToWhatsApp('Trx on+off Rp.5.000')">
+                                <span>On+Off</span>
+                                <span>Rp 5.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Trx on doang Rp 2.000')">
+                                <span>On saja</span>
+                                <span>Rp 2.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Trx off doang Rp 2.000')">
+                                <span>Off saja</span>
+                                <span>Rp 2.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="product-card">
+                    <div class="product-title">Aplikasi Premium</div>
+                    <div class="product-subtitle">Premium</div>
+                    <div class="product-description">
+                    Aplikasi Premium untuk membuka semua fitur ataupun tanpa iklan untuk aplikasi tertentu, jadi bisa sepuasnya pakai dalam waktu tertentu
+                    </div>
+                    
+                    <div class="price-list-container">
+                        <div class="price-list-toggle" onclick="togglePriceList('prem-prices')">
+                            <span>Lihat Daftar Harga</span>
+                            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        
+                        <div id="prem-prices" class="price-list">
+                            <div class="price-option" onclick="redirectToWhatsApp('Alight Motion 1tahun Rp.7.000')">
+                                <span>Alight Motion 1thn</span>
+                                <span>Rp 7.000</span>
+                            </div>
+                            <div class="price-option" onclick="redirectToWhatsApp('Capcut premium 7hari Rp 7.000')">
+                                <span>Capcut 7hari</span>
+                                <span>Rp 7.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="copyright-footer">
+                    © 2025 Website store System by Isn_pro. All rights reserved.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Download Section -->
+        <div id="download" class="page">
+            <div class="content">
+                <div class="brand-name">DOWNLOAD VIDEO</div>
+                <div class="page-title">Tanpa Watermark</div>
+                
+                <div class="download-option">
+                    <div class="download-header">
+                        <svg class="download-icon" viewBox="0 0 24 24" fill="#25F4EE">
+                            <path d="M12.162 12.72a1.27 1.27 0 0 1-.462.445 1.756 1.756 0 0 1-1.4.11v2.543a3.62 3.62 0 0 0 2.27-.99 3.76 3.76 0 0 0 1.09-2.22l2.382-10.207h-2.155l-1.72 7.323z"/>
+                            <path d="M8.51 13.275a1.27 1.27 0 0 1-.462-.446 1.543 1.543 0 0 1-.178-.765V5.23l-2.382 9.986a3.813 3.813 0 0 0-.11.765c0 .446.11.765.334.99.223.223.558.334.99.334h1.911l1.496-6.684H8.51z" fill="#000"/>
+                            <path d="M18.376 4.142H5.624c-.869 0-1.594.29-2.176.869-.58.58-.87 1.306-.87 2.176v9.986c0 .869.29 1.594.87 2.176.58.58 1.306.869 2.176.869h12.752c.869 0 1.594-.29 2.176-.869.58-.58.869-1.306.869-2.176V7.187c0-.87-.29-1.594-.869-2.176-.58-.58-1.306-.869-2.176-.869zm-5.01 14.025H8.51v-2.654h4.856v2.654zm4.632-5.01a3.021 3.021 0 0 1-1.911.765 3.022 3.022 0 0 1-1.911-.765 3.76 3.76 0 0 1-1.09-2.22l-.111-.765h5.124v-.89H12.94l.223-1.018c.112-.446.28-.812.502-1.097a1.756 1.756 0 0 1 1.4-.111c.28.112.502.28.669.502.167.223.251.48.251.78v4.41h.89v-1.352c0-.58-.112-1.074-.334-1.484a2.716 2.716 0 0 0-.98-1.04 3.62 3.62 0 0 0-2.27-.39c-.58.112-1.074.39-1.484.835-.41.446-.68.98-.812 1.596l-.334 1.484a5.072 5.072 0 0 0-.111.89c0 .58.112 1.096.334 1.542.223.446.535.813.936 1.097a4.392 4.392 0 0 0 1.596.613c.613.112 1.206.112 1.777 0a4.392 4.392 0 0 0 1.596-.613c.446-.28.813-.651 1.097-1.097.28-.446.422-.963.422-1.542v-2.543h-2.654v.89h1.764v1.63z" fill="#FE2C55"/>
+                        </svg>
+                        <div class="download-info">
+                            <div class="download-title">Download TikTok</div>
+                            <div class="download-desc">Download video TikTok tanpa watermark dengan kualitas HD</div>
+                        </div>
+                    </div>
+                    <div class="url-input-container">
+                        <input type="text" class="url-input" id="tiktok-url" placeholder="Masukkan URL video TikTok">
+                    </div>
+                    <div class="error-message" id="tiktok-error"></div>
+                    <button class="download-button" onclick="downloadTikTok()">Download</button>
+                </div>
+                
+                <div class="download-option">
+                    <div class="download-header">
+                        <svg class="download-icon" viewBox="0 0 24 24" fill="#E4405F">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                        </svg>
+                        <div class="download-info">
+                            <div class="download-title">Download Instagram</div>
+                            <div class="download-desc">Download video/IGTV/Reels Instagram tanpa watermark</div>
+                        </div>
+                    </div>
+                    <div class="url-input-container">
+                        <input type="text" class="url-input" id="instagram-url" placeholder="Masukkan URL video Instagram">
+                    </div>
+                    <div class="error-message" id="instagram-error"></div>
+                    <button class="download-button" onclick="downloadInstagram()">Download</button>
+                </div>
+                
+                <div class="download-option">
+                    <div class="download-header">
+                        <svg class="download-icon" viewBox="0 0 24 24" fill="#00B4FF">
+                            <path d="M19.715 5.828a.932.932 0 0 0-.932-.932h-3.725a.932.932 0 0 0-.932.932v3.725a.932.932 0 0 0 .932.932h3.725a.932.932 0 0 0 .932-.932V5.828zM8.874 5.828a.932.932 0 0 0-.932-.932H4.217a.932.932 0 0 0-.932.932v3.725a.932.932 0 0 0 .932.932h3.725a.932.932 0 0 0 .932-.932V5.828zM19.715 14.492a.932.932 0 0 0-.932-.932h-3.725a.932.932 0 0 0-.932.932v3.725a.932.932 0 0 0 .932.932h3.725a.932.932 0 0 0 .932-.932v-3.725zM8.874 14.492a.932.932 0 0 0-.932-.932H4.217a.932.932 0 0 0-.932.932v3.725a.932.932 0 0 0 .932.932h3.725a.932.932 0 0 0 .932-.932v-3.725z"/>
+                        </svg>
+                        <div class="download-info">
+                            <div class="download-title">Download CapCut</div>
+                            <div class="download-desc">Download template CapCut tanpa watermark</div>
+                        </div>
+                    </div>
+                    <div class="url-input-container">
+                        <input type="text" class="url-input" id="capcut-url" placeholder="Masukkan URL template CapCut">
+                    </div>
+                    <div class="error-message" id="capcut-error"></div>
+                    <button class="download-button" onclick="downloadCapCut()">Download</button>
+                </div>
+                
+                <div class="copyright-footer">
+                    © 2025 Website store System by Isn_pro. All rights reserved.
+                </div>
+            </div>
+        </div>
+        
+        <div id="Informasi" class="page">
+            <div class="content">
+                <div class="brand-name">INFORMASI & CONTOH</div>
+                
+                <div class="info-tabs">
+                    <div class="info-tab active" onclick="showInfoTab('informasi')">Informasi</div>
+                    <div class="info-tab" onclick="showInfoTab('contoh')">Contoh</div>
+                </div>
+                
+                <div id="informasi-content" class="info-content active">
+                    <div class="product-card">
+                        <div class="product-title">Informasi Produk</div>
+                        <div class="product-description">
+                            Berikut adalah daftar informasi lengkap tentang produk-produk yang tersedia:
+                        </div>
+                        
+                        <ul class="info-list">
+                            <li class="info-list-item" onclick="showProductInfo('bot')">
+                                <div class="info-list-title">Sewa Bot Permanen</div>
+                                <div class="info-list-desc">Bot jaga grub WhatsApp untuk mencegah unchek, linkgrub, suntik, bokep, dll</div>
+                            </li>
+                            <li class="info-list-item" onclick="showProductInfo('murbug')">
+                                <div class="info-list-title">Murbug Permanen</div>
+                                <div class="info-list-desc">Murbug untuk Telegram dan WhatsApp, wajib memiliki Telegram sebelum membeli</div>
+                            </li>
+                            <li class="info-list-item" onclick="showProductInfo('script')">
+                                <div class="info-list-title">Script Bot Jaga Grub</div>
+                                <div class="info-list-desc">Script untuk membuat bot WhatsApp/Telegram dengan berbagai fitur</div>
+                            </li>
+                            <li class="info-list-item" onclick="showProductInfo('panel')">
+                                <div class="info-list-title">Panel Unlimited</div>
+                                <div class="info-list-desc">Panel Pterodactyl dengan garansi 15 hari dan masa aktif 30 hari</div>
+                            </li>
+                            <li class="info-list-item" onclick="showProductInfo('trx')">
+                                <div class="info-list-title">Jasa Bikin TRX On+Off</div>
+                                <div class="info-list-desc">Layanan untuk membuat notifikasi transaksi on/off di grup</div>
+                            </li>
+                            <li class="info-list-item" onclick="showProductInfo('alight')">
+                                <div class="info-list-title">Aplikasi Premium</div>
+                                <div class="info-list-desc">Aplikasi Premium untuk membuka semua fitur ataupun tanpa iklan</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="contoh-content" class="info-content">
+                    <div class="product-card">
+                        <div class="product-title">Contoh Produk</div>
+                        <div class="product-description">
+                            Berikut adalah contoh-contoh produk yang tersedia:
+                        </div>
+                        
+                        <ul class="info-list">
+                            <li class="info-list-item" onclick="showDemoVideo('bot')">
+                                <div class="info-list-title">Contoh Bot Jaga Grub</div>
+                                <div class="info-list-desc">Klik untuk melihat demo video bot jaga grub WhatsApp</div>
+                            </li>
+                            <li class="info-list-item" onclick="showDemoVideo('murbug')">
+                                <div class="info-list-title">Contoh Murbug</div>
+                                <div class="info-list-desc">Klik untuk melihat demo video murbug Telegram/WhatsApp</div>
+                            </li>
+                            <li class="info-list-item" onclick="showDemoImage('alight-motion')">
+                                <div class="info-list-title">Contoh Alight Motion</div>
+                                <div class="info-list-desc">Klik untuk melihat contoh akun premium Alight Motion</div>
+                            </li>
+                            <li class="info-list-item" onclick="showDemoImage('capcut')">
+                                <div class="info-list-title">Contoh CapCut</div>
+                                <div class="info-list-desc">Klik untuk melihat contoh template premium CapCut</div>
+                            </li>
+                            <li class="info-list-item" onclick="showDemoImage('Panel')">
+                                <div class="info-list-title">Contoh Panel</div>
+                                <div class="info-list-desc">Klik untuk melihat contoh panel unlimited</div>
+                            </li>
+                        </ul>
+                        
+                        <div id="demo-video-container" style="margin-top: 15px; display: none;">
+                            <video id="demo-video" controls style="width: 100%; border-radius: 8px;"></video>
+                        </div>
+                        
+                        <div id="demo-image-container" style="margin-top: 15px; display: none;">
+                            <img id="demo-image" style="width: 100%; border-radius: 8px;">
+                        </div>
+                        
+                        <div id="demo-panel-container" style="margin-top: 15px; display: none;">
+                            <img id="demo-panel-image" style="width: 100%; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="copyright-footer">
+                    © 2025 Website store System by Isn_pro. All rights reserved.
+                </div>
+            </div>
+        </div>
+        
+        <div id="pengaturan" class="page">
+            <div class="content">
+                <div class="page-title">Pengaturan</div>
+                
+                <div class="product-card">
+                    <div class="setting-option">
+                        <label class="setting-label">Warna Tema:</label>
+                        <div class="color-options">
+                            <div class="color-option" style="background-color: #8a2be2;" onclick="changeThemeColor('purple', '#8a2be2', '#d8bfd8', '#551a8b')"></div>
+                            <div class="color-option selected" style="background-color: #1e90ff;" onclick="changeThemeColor('blue', '#1e90ff', '#add8e6', '#000080')"></div>
+                            <div class="color-option" style="background-color: #ff4500;" onclick="changeThemeColor('red', '#ff4500', '#ffb6c1', '#8b0000')"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="setting-option">
+                        <label class="setting-label">Ukuran Teks:</label>
+                        <div class="size-options">
+                            <div class="size-option selected" onclick="changeTextSize('small')">Kecil</div>
+                            <div class="size-option" onclick="changeTextSize('medium')">Sedang</div>
+                            <div class="size-option" onclick="changeTextSize('large')">Besar</div>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="setting-option">
+                        <label class="setting-label">Musik Latar:</label>
+                        <div class="music-options">
+                            <div class="music-option" onclick="changeBackgroundMusic('music1')">
+                                <svg class="music-icon" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M12,3V12.26C11.5,12.09 11,12 10.5,12C8.54,12 6.9,13.26 6.28,15H3V18H6.28C6.9,19.74 8.54,21 10.5,21C12.46,21 14.1,19.74 14.72,18H19V15H14.72C14.4,14.03 13.76,13.21 12.94,12.68C13.28,12.15 13.5,11.54 13.5,10.9V6.5H18V3H12Z" />
+                                </svg>
+                                Merah jambu
+                            </div>
+                            <div class="music-option" onclick="changeBackgroundMusic('music2')">
+                                <svg class="music-icon" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M12,3V12.26C11.5,12.09 11,12 10.5,12C8.54,12 6.9,13.26 6.28,15H3V18H6.28C6.9,19.74 8.54,21 10.5,21C12.46,21 14.1,19.74 14.72,18H19V15H14.72C14.4,14.03 13.76,13.21 12.94,12.68C13.28,12.15 13.5,11.54 13.5,10.9V6.5H18V3H12Z" />
+                                </svg>
+                                Kasih aba aba
+                            </div>
+                            <div class="music-option selected" onclick="changeBackgroundMusic('music3')">
+                                <svg class="music-icon" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M12,3V12.26C11.5,12.09 11,12 10.5,12C8.54,12 6.9,13.26 6.28,15H3V18H6.28C6.9,19.74 8.54,21 10.5,21C12.46,21 14.1,19.74 14.72,18H19V15H14.72C14.4,14.03 13.76,13.21 12.94,12.68C13.28,12.15 13.5,11.54 13.5,10.9V6.5H18V3H12Z" />
+                                </svg>
+                                Mangu
+                            </div>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.1" value="0.5" class="volume-control" id="volume-control" oninput="changeVolume(this.value)">
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="product-title">Hubungi Kami</div>
+                    <div class="product-description">
+                        Hubungi kami melalui WhatsApp atau Telegram untuk pertanyaan atau bantuan.
+                    </div>
+                    <button class="buy-button" onclick="toggleContactOptions()" style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                        Hubungi Kami
+                    </button>
+                    
+                    <div id="contact-options" class="contact-options">
+                        <div class="contact-option" onclick="redirectToWhatsApp('Halo, saya ingin bertanya tentang...')">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-6.29-3.51c.545 0 1.033-.487 1.033-1.032 0-.546-.487-1.033-1.033-1.033-.546 0-1.033.487-1.033 1.033 0 .545.487 1.032 1.033 1.032m4.128 0c.546 0 1.033-.487 1.033-1.032 0-.546-.487-1.033-1.033-1.033-.545 0-1.032.487-1.032 1.033 0 .545.486 1.032 1.032 1.032M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0-2a12 12 0 0 0-12 12 12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0z"/>
+                            </svg>
+                            <div class="contact-text">WhatsApp: 628988685425</div>
+                        </div>
+                        <div class="contact-option" onclick="redirectToTelegram()">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.26.26-.429.26l.213-3.053 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                            </svg>
+                            <div class="contact-text">Telegram: t.me/Isnxmahiru</div>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="product-title">Reset Pengaturan</div>
+                    <div class="product-description">
+                        Kembalikan semua pengaturan ke nilai default.
+                    </div>
+                    <button class="buy-button" onclick="resetSettings()">Reset</button>
+                </div>
+
+                <div class="copyright-footer">
+                    © 2025 Website store System by Isn_pro. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR DI BAWAH -->
+    <div class="navbar">
+        <a href="#" class="navbar-item active" onclick="showPage('beranda')">
+            <svg class="navbar-icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+            </svg>
+            Beranda
+        </a>
+        <a href="#" class="navbar-item" onclick="showPage('download')">
+            <svg class="navbar-icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+            </svg>
+            Download
+        </a>
+        <a href="#" class="navbar-item" onclick="showPage('Informasi')">
+            <svg class="navbar-icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M7,7V9H9V7H7M11,7V9H13V7H11M15,7V9H17V7H15M7,11V13H9V11H7M11,11V13H13V11H11M15,11V13H17V11H15M7,15V17H9V15H7M11,15V17H13V15H11M15,15V17H17V15H15Z" />
+            </svg>
+            Informasi
+        </a>
+        <a href="#" class="navbar-item" onclick="showPage('pengaturan')">
+            <svg class="navbar-icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+            </svg>
+            Pengaturan
+        </a>
+    </div>
+
+    <script>
+        const musicTracks = {
+            music1: "https://files.catbox.moe/xtkb2n.mp3",
+            music2: "https://files.catbox.moe/qxwsuh.mp3",
+            music3: "https://files.catbox.moe/uihw75.mp3"
+        };
+        
+        const demoImages = {
+            'alight-motion': 'https://img1.pixhost.to/images/6968/618530281_adhamproject.jpg',
+            'capcut': 'https://img1.pixhost.to/images/6968/618530200_adhamproject.jpg',
+            'Panel': 'https://img1.pixhost.to/images/6968/618530303_adhamproject.jpg'
+        };
+        
+        // Variables to track the last shown content
+        let lastShownVideoType = null;
+        let lastShownImageType = null;
+        let lastShownPanelType = null;
+        let currentMusic = null;
+        let musicInitialized = false;
+
+        // Function to start the app (hide welcome screen and show beranda)
+        function startApp() {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            welcomeScreen.classList.add('fade-out');
+            
+            // Show beranda after animation completes
+            setTimeout(() => {
+                welcomeScreen.style.display = 'none';
+                showPage('beranda');
+            }, 500);
+            
+            // Initialize music on first interaction
+            initMusicOnInteraction();
+        }
+
+        // Function to initialize music on first user interaction
+        function initMusicOnInteraction() {
+            if (musicInitialized) return;
+            
+            musicInitialized = true;
+            const audio = document.getElementById('background-music');
+            audio.src = musicTracks['music3'];
+            audio.volume = document.getElementById('volume-control').value;
+            
+            // Try to play and catch any errors
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Autoplay prevented:", error);
+                });
+            }
+            
+            currentMusic = 'music3';
+            
+            // Mark Mangu as selected
+            document.querySelectorAll('.music-option').forEach(option => {
+                if (option.getAttribute('onclick').includes('music3')) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        // Add event listeners for user interaction
+        document.addEventListener('click', initMusicOnInteraction, { once: true });
+        document.addEventListener('keydown', initMusicOnInteraction, { once: true });
+        document.addEventListener('touchstart', initMusicOnInteraction, { once: true });
+        
+        function initGalaxy() {
+            const galaxy = document.getElementById('galaxy-bg');
+            
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 3 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = Math.random();
+                star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                galaxy.appendChild(star);
+            }
+            
+            function createShootingStar() {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.left = `${Math.random() * 20}%`;
+                shootingStar.style.top = `${Math.random() * 20}%`;
+                shootingStar.style.setProperty('--shooting-duration', `${Math.random() * 3 + 2}s`);
+                galaxy.appendChild(shootingStar);
+                
+                setTimeout(() => {
+                    shootingStar.remove();
+                }, 5000);
+            }
+            
+            setInterval(createShootingStar, 2000);
+            
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createShootingStar, i * 800);
+            }
+        }
+        
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.navbar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and activate the corresponding navbar item
+            const activeNavItem = document.querySelector(`.navbar-item[onclick="showPage('${pageId}')"]`);
+            if (activeNavItem) {
+                activeNavItem.classList.add('active');
+            }
+            
+            // Resume audio if it was playing
+            if (musicInitialized && currentMusic) {
+                const audio = document.getElementById('background-music');
+                audio.play().catch(e => console.log("Playback prevented:", e));
+            }
+        }
+        
+        function redirectToWhatsApp(productName) {
+            const phoneNumber = "628988685425";
+            const message = `Halo, saya ingin membeli ${productName}. masih ada?`;
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+        }
+
+        function redirectToTelegram() {
+            window.open('https://t.me/Isnxmahiru', '_blank');
+        }
+
+        // Toggle price list dropdown
+        function togglePriceList(id) {
+            const priceList = document.getElementById(id);
+            const toggleButton = event.currentTarget;
+            
+            // Toggle the price list
+            priceList.classList.toggle('open');
+            toggleButton.classList.toggle('open');
+            
+            // Close other open price lists
+            document.querySelectorAll('.price-list').forEach(list => {
+                if (list.id !== id && list.classList.contains('open')) {
+                    list.classList.remove('open');
+                    const otherToggle = document.querySelector(`.price-list-toggle[onclick*="${list.id}"]`);
+                    if (otherToggle) otherToggle.classList.remove('open');
+                }
+            });
+        }
+
+        // Toggle contact options dropdown
+        function toggleContactOptions() {
+            const contactDiv = document.getElementById('contact-options');
+            if (contactDiv.style.display === 'none' || contactDiv.style.display === '') {
+                contactDiv.style.display = 'block';
+            } else {
+                contactDiv.style.display = 'none';
+            }
+        }
+
+        // Show information tab
+        function showInfoTab(tabId) {
+            document.querySelectorAll('.info-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.info-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Activate clicked tab
+            const clickedTab = document.querySelector(`.info-tab[onclick="showInfoTab('${tabId}')"]`);
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            }
+            
+            // Show corresponding content
+            document.getElementById(`${tabId}-content`).classList.add('active');
+        }
+
+        // Show product information
+        function showProductInfo(productType) {
+            let title = '';
+            let description = '';
+            
+            switch(productType) {
+                case 'bot':
+                    title = 'Sewa Bot';
+                    description = 'Bot jaga grub WhatsApp untuk mencegah unchek, linkgrub, suntik, bokep, dll. Harga mulai dari Rp 1.000 untuk 1 minggu hingga Rp 5.000 untuk permanen.';
+                    break;
+                case 'murbug':
+                    title = 'Murbug';
+                    description = 'Murbug untuk Telegram dan WhatsApp. Sebelum membeli wajib memiliki akun Telegram. Harga mulai dari Rp 5.000 untuk 2 minggu hingga Rp 20.000 untuk owner.';
+                    break;
+                case 'script':
+                    title = 'Script Bot';
+                    description = 'Script untuk membuat bot WhatsApp/Telegram dengan berbagai fitur seperti jaga grub, push kontak, dan bug free up. Harga mulai dari Rp 10.000 per script.';
+                    break;
+                case 'panel':
+                    title = 'Panel bot';
+                    description = 'Panel Pterodactyl dengan garansi 15 hari dan masa aktif 30 hari. Bisa request username. Harga mulai dari Rp 1.000 untuk 2GB hingga Rp 8.000 untuk unlimited.';
+                    break;
+                case 'trx':
+                    title = 'Jasa Bikin All Trx';
+                    description = 'Layanan untuk membuat notifikasi transaksi on/off di grup. Harga Rp 5.000 untuk on+off, atau Rp 2.000 untuk on saja/off saja.';
+                    break;
+                case 'alight':
+                    title = 'Aplikasi Premium';
+                    description = 'Aplikasi Premium untuk membuka semua fitur ataupun tanpa iklan untuk aplikasi tertentu, jadi bisa sepuasnya pakai dalam waktu tertentu.';
+                    break;
+                default:
+                    title = 'Informasi Produk';
+                    description = 'Pilih produk untuk melihat informasi lebih detail.';
+            }
+            
+            alert(`${title}\n\n${description}`);
+        }
+
+        function showDemoVideo(type) {
+            const videoContainer = document.getElementById('demo-video-container');
+            const videoElement = document.getElementById('demo-video');
+            
+            // If clicking the same button twice, don't do anything
+            if (lastShownVideoType === type && videoContainer.style.display === 'block') {
+                return;
+            }
+            
+            // Hide other demo containers
+            document.getElementById('demo-image-container').style.display = 'none';
+            document.getElementById('demo-panel-container').style.display = 'none';
+            
+            // Set video source based on type
+            if (type === 'bot') {
+                videoElement.src = 'https://n.uguu.se/WGRYhXRH.mp4';
+            } else if (type === 'murbug') {
+                videoElement.src = 'https://h.uguu.se/ZMhSdJDK.mp4';
+            }
+            
+            // Show the container
+            videoContainer.style.display = 'block';
+            lastShownVideoType = type;
+            
+            // Scroll to the video if needed
+            videoContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Try to play the video
+            videoElement.play().catch(e => {
+                console.log("Video play prevented:", e);
+                // Show a message if autoplay is blocked
+                alert("Silakan klik tombol play pada video untuk memulai.");
+            });
+        }
+
+        function showDemoImage(type) {
+            if (type === 'Panel') {
+                const panelContainer = document.getElementById('demo-panel-container');
+                const panelImage = document.getElementById('demo-panel-image');
+                
+                // If clicking the same button twice, don't do anything
+                if (lastShownPanelType === type && panelContainer.style.display === 'block') {
+                    return;
+                }
+                
+                // Hide other demo containers
+                document.getElementById('demo-video-container').style.display = 'none';
+                document.getElementById('demo-image-container').style.display = 'none';
+                
+                // Set image source
+                panelImage.src = demoImages[type];
+                panelImage.alt = 'Demo Panel';
+                
+                // Show the container
+                panelContainer.style.display = 'block';
+                lastShownPanelType = type;
+                
+                // Scroll to the image if needed
+                panelContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                const imageContainer = document.getElementById('demo-image-container');
+                const imageElement = document.getElementById('demo-image');
+                
+                // If clicking the same button twice, don't do anything
+                if (lastShownImageType === type && imageContainer.style.display === 'block') {
+                    return;
+                }
+                
+                // Hide other demo containers
+                document.getElementById('demo-video-container').style.display = 'none';
+                document.getElementById('demo-panel-container').style.display = 'none';
+                
+                // Set image source based on type
+                if (demoImages[type]) {
+                    imageElement.src = demoImages[type];
+                    imageElement.alt = type === 'alight-motion' ? 'Demo Alight Motion' : 'Demo CapCut';
+                    
+                    // Show the container
+                    imageContainer.style.display = 'block';
+                    lastShownImageType = type;
+                    
+                    // Scroll to the image if needed
+                    imageContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        }
+
+        function changeThemeColor(color, mainColor, lightColor, darkColor) {
+            document.documentElement.style.setProperty('--main-color', mainColor);
+            document.documentElement.style.setProperty('--light-color', lightColor);
+            document.documentElement.style.setProperty('--dark-color', darkColor);
+            
+            const rgb = hexToRgb(mainColor);
+            document.documentElement.style.setProperty('--main-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+            
+            document.getElementById('galaxy-bg').style.background = `#000000`;
+            
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            localStorage.setItem('themeColor', color);
+            localStorage.setItem('mainColor', mainColor);
+            localStorage.setItem('lightColor', lightColor);
+            localStorage.setItem('darkColor', darkColor);
+        }
+        
+        function hexToRgb(hex) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return { r, g, b };
+        }
+
+        function changeTextSize(size) {
+            let fontSize;
+            switch(size) {
+                case 'small':
+                    fontSize = '12px';
+                    break;
+                case 'medium':
+                    fontSize = '16px';
+                    break;
+                case 'large':
+                    fontSize = '20px';
+                    break;
+                default:
+                    fontSize = '16px';
+            }
+            
+            document.body.style.fontSize = fontSize;
+            
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            localStorage.setItem('textSize', size);
+        }
+        
+        function changeBackgroundMusic(trackId) {
+            const audio = document.getElementById('background-music');
+            
+            if (currentMusic === trackId) {
+                if (audio.paused) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+                return;
+            }
+            
+            currentMusic = trackId;
+            audio.src = musicTracks[trackId];
+            audio.play();
+            
+            document.querySelectorAll('.music-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            localStorage.setItem('backgroundMusic', trackId);
+        }
+        
+        function changeVolume(volume) {
+            const audio = document.getElementById('background-music');
+            audio.volume = volume;
+            
+            localStorage.setItem('musicVolume', volume);
+        }
+
+        function resetSettings() {
+            changeThemeColor('blue', '#1e90ff', '#add8e6', '#000080');
+            
+            changeTextSize('medium');
+            
+            const audio = document.getElementById('background-music');
+            audio.pause();
+            audio.src = '';
+            currentMusic = null;
+            document.querySelectorAll('.music-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.getElementById('volume-control').value = 0.5;
+            audio.volume = 0.5;
+            
+            localStorage.removeItem('themeColor');
+            localStorage.removeItem('mainColor');
+            localStorage.removeItem('lightColor');
+            localStorage.removeItem('darkColor');
+            localStorage.removeItem('textSize');
+            localStorage.removeItem('backgroundMusic');
+            localStorage.removeItem('musicVolume');
+        }
+
+        // Function to validate URLs
+        function isValidUrl(url, platform) {
+            const patterns = {
+                tiktok: [
+                    /https?:\/\/(www\.)?tiktok\.com\/@.+\/video\/\d+/,
+                    /https?:\/\/(vm\.|www\.)?tiktok\.com\/.+/,
+                    /https?:\/\/vt\.tiktok\.com\/.+/,
+                    /https?:\/\/m\.tiktok\.com\/v\/\d+\.html/
+                ],
+                instagram: [
+                    /https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\/[^\/]+/,
+                    /https?:\/\/(www\.)?instagr\.am\/(p|reel|tv)\/[^\/]+/
+                ],
+                capcut: [
+                    /https?:\/\/(www\.)?capcut\.com\/template\/[^\/]+/,
+                    /https?:\/\/(www\.)?capcut\.com\/t\/[^\/]+/
+                ]
+            };
+            
+            return patterns[platform].some(pattern => pattern.test(url));
+        }
+
+        // Helper function to show errors
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            } else {
+                alert(message);
+            }
+        }
+
+        // Generic download function for all platforms
+        async function downloadVideo(platform) {
+            const urlInput = document.getElementById(`${platform}-url`);
+            const errorElement = document.getElementById(`${platform}-error`);
+            const downloadBtn = document.querySelector(`#download .download-button[onclick="download${platform.charAt(0).toUpperCase() + platform.slice(1)}()"]`);
+            const url = urlInput.value.trim();
+            
+            // Reset error message
+            if (errorElement) {
+                errorElement.style.display = 'none';
+                errorElement.textContent = '';
+            }
+            
+            // Validate URL
+            if (!url) {
+                showError(`${platform}-error`, `Silakan masukkan URL video ${platform.charAt(0).toUpperCase() + platform.slice(1)} terlebih dahulu`);
+                return;
+            }
+            
+            if (!isValidUrl(url, platform)) {
+                showError(`${platform}-error`, `URL ${platform.charAt(0).toUpperCase() + platform.slice(1)} tidak valid.`);
+                return;
+            }
+            
+            // Show loading state
+            downloadBtn.classList.add('loading');
+            downloadBtn.disabled = true;
+            
+            try {
+                // Call the API
+                const apiUrl = `https://fastrestapis.fasturl.cloud/api/download/${platform}?url=${encodeURIComponent(url)}`;
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Gagal memproses: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.url) {
+                    throw new Error('Gagal mendapatkan video dari API');
+                }
+                
+                // Create a temporary link to download the video
+                const a = document.createElement('a');
+                a.href = data.url;
+                a.target = '_blank';
+                a.download = `${platform}-video.mp4`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                showError(`${platform}-error`, `Gagal mendownload: ${error.message}`);
+                
+            } finally {
+                // Reset button state
+                downloadBtn.classList.remove('loading');
+                downloadBtn.disabled = false;
+            }
+        }
+
+        // Platform-specific functions
+        async function downloadTikTok() {
+            await downloadVideo('tiktok');
+        }
+
+        async function downloadInstagram() {
+            await downloadVideo('instagram');
+        }
+
+        async function downloadCapCut() {
+            await downloadVideo('capcut');
+        }
+
+        window.onload = function() {
+            initGalaxy();
+            
+            document.documentElement.style.setProperty('--main-rgb', '30, 144, 255');
+            
+            const savedTheme = localStorage.getItem('themeColor') || 'blue';
+            const mainColor = localStorage.getItem('mainColor') || '#1e90ff';
+            const lightColor = localStorage.getItem('lightColor') || '#add8e6';
+            const darkColor = localStorage.getItem('darkColor') || '#000080';
+            
+            changeThemeColor(savedTheme, mainColor, lightColor, darkColor);
+            
+            const savedTextSize = localStorage.getItem('textSize') || 'medium';
+            changeTextSize(savedTextSize);
+            
+            const savedMusic = localStorage.getItem('backgroundMusic');
+            const savedVolume = localStorage.getItem('musicVolume') || 0.5;
+            
+            document.getElementById('volume-control').value = savedVolume;
+            
+            if (savedMusic) {
+                const audio = document.getElementById('background-music');
+                audio.src = musicTracks[savedMusic];
+                audio.volume = savedVolume;
+                currentMusic = savedMusic;
+                
+                document.querySelectorAll('.music-option').forEach(option => {
+                    if (option.getAttribute('onclick').includes(savedMusic)) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+            
+            // Hide all pages initially except welcome screen
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>
